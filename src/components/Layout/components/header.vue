@@ -29,7 +29,7 @@ const changeCollapse = () => {
   z-index: 5;
   padding: 12px 16px;
   box-sizing: border-box;
-  width: calc(100% - 210px);
+  width: calc(100% - 211px);
   transition: width 0.28s;
   background-color: #ffffff;
   .navbar {
@@ -43,6 +43,6 @@ const changeCollapse = () => {
   }
 }
 .moreHeader {
-  width: calc(100% - 64px);
+  width: calc(100% - 65px);
 }
 </style>

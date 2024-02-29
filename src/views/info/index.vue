@@ -37,13 +37,13 @@
     </div>
 
     <div class="page-container__content">
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="message" label="报错信息" width="300"> </el-table-column>
-        <el-table-column prop="pageUrl" label="报错页面"> </el-table-column>
+      <el-table :data="tableData" stripe size="small" class="table-wrap">
+        <el-table-column type="index" label="序号" width="50"></el-table-column>
+        <el-table-column prop="message" label="报错信息" width="300"></el-table-column>
+        <el-table-column prop="pageUrl" label="报错页面" width="300"></el-table-column>
         <el-table-column prop="time" label="报错时间" width="150">
           <template #default="{ row }">
-            <span>{{ row.time ? format(row.time) : row.date }}</span>
+            <span>{{ row.time ? formatDate(row.time) : row.date }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="apikey" label="项目编号"> </el-table-column>
@@ -64,15 +64,18 @@
             <el-button
               v-if="row.type == 'error' || row.type == 'unhandledrejection'"
               type="primary"
+              size="small"
               @click="revertCode(row)"
               >查看源码</el-button
             >
+            <div v-else></div>
           </template>
         </el-table-column>
         <!-- <el-table-column fixed="right" prop="recordScreenId" label="播放录屏" width="100">
           <template #default="{ row }">
             <el-button
               v-if="row.recordScreenId"
+              size="small"
               type="primary"
               @click="playRecord(row.recordScreenId)"
               >播放录屏</el-button
@@ -81,7 +84,11 @@
         </el-table-column> -->
         <el-table-column fixed="right" prop="breadcrumb" label="用户行为记录" width="125">
           <template #default="{ row }">
-            <el-button v-if="row.breadcrumb" type="primary" @click="revertBehavior(row)"
+            <el-button
+              size="small"
+              v-if="row.breadcrumb"
+              type="primary"
+              @click="revertBehavior(row)"
               >查看用户行为</el-button
             >
           </template>
@@ -89,10 +96,13 @@
       </el-table>
     </div>
   </div>
+  <Dialog v-model:show="revertDialog" :dialog-title="dialogTitle" :activities="activities" />
 </template>
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
+import Dialog from './components/dialog/index.vue'
+import { formatDate } from '@/utils/index'
 
 const formData = reactive({
   user: '',
@@ -105,6 +115,9 @@ onMounted(() => {
 })
 
 const tableData = ref([])
+const activities = ref([])
+const dialogTitle = ref('')
+const revertDialog = ref(false)
 
 const getTableData = () => {
   setTimeout(() => {
@@ -116,16 +129,31 @@ const getTableData = () => {
       })
   }, 500)
 }
-const format = (time) => {
-  let str = new Date(time)
-  return str.toLocaleDateString().replace(/\//g, '-') + ' ' + str.toTimeString().substr(0, 8)
-}
+
 const revertCode = () => {
   console.log('revertCode: ', 11)
 }
 
-const revertBehavior = () => {
-  console.log('revertBehavior: ', 22)
+const revertBehavior = ({ breadcrumb }) => {
+  dialogTitle.value = '查看用户行为'
+  console.log('查看用户行为: ', 111)
+  revertDialog.value = true
+  breadcrumb.forEach((item) => {
+    item.color = item.status == 'ok' ? '#5FF713' : '#F70B0B'
+    item.icon = item.status == 'ok' ? 'el-icon-check' : 'el-icon-close'
+    if (item.category == 'Click') {
+      item.content = `用户点击dom: ${item.data}`
+    } else if (item.category == 'Http') {
+      item.content = `调用接口: ${item.data.url}, ${item.status == 'ok' ? '请求成功' : '请求失败'}`
+    } else if (item.category == 'Code_Error') {
+      item.content = `代码报错：${item.data.message}`
+    } else if (item.category == 'Resource_Error') {
+      item.content = `加载资源报错：${item.message}`
+    } else if (item.category == 'Route') {
+      item.content = `路由变化：从 ${item.data.from}页面 切换到 ${item.data.to}页面`
+    }
+  })
+  activities.value = breadcrumb
 }
 
 const onSubmit = () => {
@@ -134,4 +162,8 @@ const onSubmit = () => {
 </script>
 
 <style lang="less" scoped>
+.table-wrap {
+  width: 100%;
+  height: 100%;
+}
 </style>
