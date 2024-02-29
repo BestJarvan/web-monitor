@@ -1,11 +1,12 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useCollapseStore = defineStore('isCollapse', () => {
-  const collapse = ref(false)
+  const storeVal = localStorage.getItem('MONITOR_IS_COLLAPSE')
+  const collapse = ref(storeVal ? JSON.parse(storeVal) : false)
   function changeCollapse() {
     collapse.value = !collapse.value
-    console.log('collapse: ', collapse.value, 12312312);
+    localStorage.setItem('MONITOR_IS_COLLAPSE', collapse.value)
   }
 
   return { collapse, changeCollapse }

@@ -1,7 +1,7 @@
 <template>
-  <div class="sidebar-logo-container" :class="{ collapse: collapse }">
+  <div class="sidebar-logo-container" :class="{ collapse: props.collapse }">
     <Transition name="sidebarLogoFade">
-      <RouterLink v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
+      <RouterLink v-if="props.collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img :src="logo" class="sidebar-logo" />
       </RouterLink>
       <RouterLink v-else key="expand" class="sidebar-logo-link" to="/">
@@ -15,15 +15,13 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useCollapseStore } from '@/stores/dashboard'
-import { storeToRefs } from 'pinia'
 import logoImg from '@/assets/logo/logo.png'
 import logoName from '@/assets/logo/name.png'
 
+const props = defineProps(['collapse'])
+
 const logo = ref(logoImg)
 const name = ref(logoName)
-const store = useCollapseStore()
-const { collapse } = storeToRefs(store)
 </script>
 
 <style lang="less" scoped>
@@ -39,6 +37,7 @@ const { collapse } = storeToRefs(store)
 .sidebar-logo-container {
   position: relative;
   width: 100%;
+  height: 84px;
   text-align: center;
   overflow: hidden;
   &::after {
@@ -75,6 +74,7 @@ const { collapse } = storeToRefs(store)
   }
 
   &.collapse {
+    height: 56px;
     .sidebar-logo {
       margin-right: 0px;
     }

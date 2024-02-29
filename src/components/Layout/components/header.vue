@@ -1,9 +1,9 @@
 <template>
-  <div class="header" :class="{ moreHeader: collapse }">
+  <div class="header" :class="{ moreHeader: props.collapse }">
     <div class="navbar">
       <div class="navbar-left">
         <el-icon :size="20" color="#666666" style="cursor: pointer" @click="changeCollapse">
-          <DArrowRight v-if="collapse" />
+          <DArrowRight v-if="props.collapse" />
           <DArrowLeft v-else />
         </el-icon>
       </div>
@@ -13,13 +13,12 @@
 </template>
 
 <script setup>
-import { useCollapseStore } from '@/stores/dashboard'
-import { storeToRefs } from 'pinia'
+const props = defineProps(['collapse'])
+const emit = defineEmits(['changeCollapse'])
 
-const store = useCollapseStore()
-
-const { collapse } = storeToRefs(store)
-const { changeCollapse } = store
+const changeCollapse = () => {
+  emit('changeCollapse')
+}
 </script>
 
 <style lang="less" scoped>
@@ -27,6 +26,7 @@ const { changeCollapse } = store
   position: fixed;
   top: 0;
   right: 0;
+  z-index: 5;
   padding: 12px 16px;
   box-sizing: border-box;
   width: calc(100% - 210px);

@@ -1,10 +1,10 @@
 <template>
-  <div class="aside" :class="{ minAside: collapse }">
-    <Logo />
+  <div class="aside" :class="{ minAside: props.collapse }">
+    <Logo :collapse="props.collapse" />
     <el-menu
       router
-      default-active="/"
-      :collapse="collapse"
+      :default-active="activeMenu"
+      :collapse="props.collapse"
       :collapse-transition="false"
       @open="handleOpen"
       @close="handleClose"
@@ -33,12 +33,19 @@
 </template>
 
 <script setup>
-import { useCollapseStore } from '@/stores/dashboard'
-import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import Logo from './logo.vue'
 
-const store = useCollapseStore()
-const { collapse } = storeToRefs(store)
+const route = useRoute()
+const props = defineProps(['collapse'])
+
+const activeMenu = computed(() => {
+  if (route.meta.activeMenu) {
+    return route.meta.activeMenu
+  }
+  return route.path
+})
 
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
@@ -50,11 +57,14 @@ const handleClose = (key, keyPath) => {
 
 <style lang="less" scoped>
 .aside {
+  position: fixed;
+  left: 0;
+  top: 0;
   width: 210px;
   height: 100%;
+  z-index: 5;
   border-right: 1px solid #f2f2f2;
-  position: relative;
-  z-index: 2;
+  background-color: #ffffff;
   transition: width 0.28s;
   &.minAside {
     width: 64px;
