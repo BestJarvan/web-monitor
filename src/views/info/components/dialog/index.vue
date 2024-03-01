@@ -6,7 +6,8 @@
     destroy-on-close
     :before-close="handleClose"
   >
-    <el-timeline>
+    <div v-if="htmlDom" v-html="htmlDom"></div>
+    <el-timeline v-else>
       <el-timeline-item
         v-for="(activity, index) in props.activities"
         :key="index"
@@ -28,7 +29,7 @@
 <script setup>
 import { formatDate } from '@/utils/index'
 
-const props = defineProps(['activities', 'dialogTitle', 'show'])
+const props = defineProps(['activities', 'dialogTitle', 'htmlDom', 'show'])
 const emit = defineEmits(['update:show'])
 
 const handleClose = () => {
@@ -36,5 +37,20 @@ const handleClose = () => {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.errdetail {
+  text-align: left;
+  width: 100%;
+  font-size: 16px;
+}
+.code-line {
+  padding: 5px 0;
+}
+.heightlight {
+  background-color: yellowgreen;
+}
+.errheader {
+  padding: 10px;
+  border-bottom: 1px solid rgb(214, 210, 210);
+}
 </style>

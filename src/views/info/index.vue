@@ -96,13 +96,19 @@
       </el-table>
     </div>
   </div>
-  <Dialog v-model:show="revertDialog" :dialog-title="dialogTitle" :activities="activities" />
+  <Dialog
+    v-model:show="revertDialog"
+    :dialog-title="dialogTitle"
+    :activities="activities"
+    :html-dom="htmlDom"
+  />
 </template>
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
 import Dialog from './components/dialog/index.vue'
 import { formatDate } from '@/utils/index'
+import { findCodeBySourceMap } from '@/utils/sourcemap'
 
 const formData = reactive({
   user: '',
@@ -116,6 +122,7 @@ onMounted(() => {
 
 const tableData = ref([])
 const activities = ref([])
+const htmlDom = ref('')
 const dialogTitle = ref('')
 const revertDialog = ref(false)
 
@@ -130,13 +137,17 @@ const getTableData = () => {
   }, 500)
 }
 
-const revertCode = () => {
-  console.log('revertCode: ', 11)
+const revertCode = (row) => {
+  findCodeBySourceMap(row, (res) => {
+    console.log('res: ', res)
+    dialogTitle.value = '查看源码'
+    revertDialog.value = true
+    htmlDom.value = res
+  })
 }
 
 const revertBehavior = ({ breadcrumb }) => {
   dialogTitle.value = '查看用户行为'
-  console.log('查看用户行为: ', 111)
   revertDialog.value = true
   breadcrumb.forEach((item) => {
     item.color = item.status == 'ok' ? '#5FF713' : '#F70B0B'
