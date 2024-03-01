@@ -12,9 +12,7 @@ function replaceAll(str) {
 }
 
 function loadSourceMap(fileName) {
-  console.log('fileName: ', fileName);
   let file = matchStr(fileName);
-  console.log('file: ', file);
   if (!file) return;
   return new Promise((resolve) => {
     fetch(`http://localhost:8083/getmap?fileName=${file}`).then((response) => {
@@ -24,9 +22,7 @@ function loadSourceMap(fileName) {
 }
 
 export const findCodeBySourceMap = async ({ fileName, line, column }, callback) => {
-  console.log('fileName', fileName);
   let sourceData = await loadSourceMap(fileName);
-  console.log('sourceData: ', sourceData);
   if (!sourceData) return;
   let { sourcesContent, sources } = sourceData;
   let consumer = await new sourceMap.SourceMapConsumer(sourceData);
@@ -63,7 +59,6 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
     );
     index = copySources.indexOf(result.source);
   }
-  console.log('index', index);
   if (index === -1) {
     return ElMessage({
       type: 'error',
