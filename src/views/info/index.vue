@@ -143,12 +143,14 @@ const revertCode = (row) => {
     dialogTitle.value = '查看源码'
     revertDialog.value = true
     htmlDom.value = res
+    activities.value = void 0
   })
 }
 
 const revertBehavior = ({ breadcrumb }) => {
   dialogTitle.value = '查看用户行为'
   revertDialog.value = true
+  htmlDom.value = void 0
   breadcrumb.forEach((item) => {
     item.color = item.status == 'ok' ? '#5FF713' : '#F70B0B'
     item.icon = item.status == 'ok' ? 'el-icon-check' : 'el-icon-close'

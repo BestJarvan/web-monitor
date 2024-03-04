@@ -15,7 +15,7 @@ function loadSourceMap(fileName) {
   let file = matchStr(fileName);
   if (!file) return;
   return new Promise((resolve) => {
-    fetch(`http://localhost:8083/getmap?fileName=${file}`).then((response) => {
+    fetch(`http://localhost:81/getMap/picp?fileName=${file}`).then((response) => {
       resolve(response.json());
     });
   });
@@ -73,12 +73,10 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
   var start = row - 5 >= 0 ? row - 5 : 0, // 将报错代码显示在中间位置
     end = start + 9 >= len ? len : start + 9; // 最多展示10行
   let newLines = [];
-  let j = 0;
   for (var i = start; i <= end; i++) {
-    j++;
     newLines.push(
       `<div class="code-line ${i + 1 == row ? 'heightlight' : ''}" title="${i + 1 == row ? result.source : ''
-      }">${j}. ${replaceAll(codeList[i])}</div>`
+      }"><xmp>${i + 1}. ${(codeList[i])}</xmp></div>`
     );
   }
 
