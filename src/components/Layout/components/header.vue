@@ -7,7 +7,7 @@
           <DArrowLeft v-else />
         </el-icon>
       </div>
-      <div class="navbar-right">123123</div>
+      <div class="navbar-right">用户1</div>
     </div>
   </div>
 </template>

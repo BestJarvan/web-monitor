@@ -1,5 +1,4 @@
 import sourceMap from 'source-map-js';
-import { ElMessage } from 'element-plus';
 
 // 找到以.js结尾的fileName
 function matchStr(str) {
@@ -45,7 +44,7 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
     return ElMessage({
       type: 'error',
       duration: 5000,
-      ElMessage: `源码解析失败: 因为报错来自三方依赖，报错文件为 ${result.source}`
+      message: `源码解析失败: 因为报错来自三方依赖，报错文件为 ${result.source}`
     });
   }
 
@@ -63,7 +62,7 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
     return ElMessage({
       type: 'error',
       duration: 5000,
-      ElMessage: `源码解析失败`
+      message: `源码解析失败`
     });
   }
   let code = sourcesContent[index];

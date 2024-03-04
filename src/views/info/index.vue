@@ -109,6 +109,7 @@ import { reactive, ref, onMounted } from 'vue'
 import Dialog from './components/dialog/index.vue'
 import { formatDate } from '@/utils/index'
 import { findCodeBySourceMap } from '@/utils/sourcemap'
+import { fetchErrorList } from '@/api/info'
 
 const formData = reactive({
   user: '',
@@ -128,10 +129,9 @@ const revertDialog = ref(false)
 
 const getTableData = () => {
   setTimeout(() => {
-    fetch(`http://localhost:8083/getErrorList`)
+    fetchErrorList()
       .then((response) => response.json())
       .then((res) => {
-        console.log('res.data: ', res.data)
         tableData.value = res.data
       })
   }, 500)
@@ -139,7 +139,6 @@ const getTableData = () => {
 
 const revertCode = (row) => {
   findCodeBySourceMap(row, (res) => {
-    console.log('res: ', res)
     dialogTitle.value = '查看源码'
     revertDialog.value = true
     htmlDom.value = res
