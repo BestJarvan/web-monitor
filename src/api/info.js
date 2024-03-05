@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 错误信息列表
-export function fetchErrorList(params) {
+export function fetchErrorList(data) {
   return request({
     url: '/getErrorList',
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 

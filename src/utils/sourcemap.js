@@ -1,4 +1,5 @@
 import sourceMap from 'source-map-js';
+import { fetchMapFile } from '@/api/utils'
 
 // 找到以.js结尾的fileName
 function matchStr(str) {
@@ -14,9 +15,9 @@ function loadSourceMap(fileName) {
   let file = matchStr(fileName);
   if (!file) return;
   return new Promise((resolve) => {
-    fetch(`http://localhost:81/getMap/picp?fileName=${file}`).then((response) => {
-      resolve(response.json());
-    });
+    fetchMapFile({ fileName: file }).then(({ data }) => {
+      resolve(data);
+    })
   });
 }
 

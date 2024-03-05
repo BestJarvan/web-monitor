@@ -129,11 +129,9 @@ const revertDialog = ref(false)
 
 const getTableData = () => {
   setTimeout(() => {
-    fetchErrorList()
-      .then((response) => response.json())
-      .then((res) => {
-        tableData.value = res.data
-      })
+    fetchErrorList().then(({ data }) => {
+      tableData.value = data
+    })
   }, 500)
 }
 
