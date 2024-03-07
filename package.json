@@ -8,6 +8,7 @@
     "serve:prod": "vite --mode prod",
     "build:test": "vite build --mode dev",
     "build:prod": "vite build --mode prod",
+    "deploy:jen": "helper-cli dp stbella-monitor-test",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
