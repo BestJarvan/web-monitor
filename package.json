@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "vite --mode dev",
     "serve:prod": "vite --mode prod",
-    "build": "vite build --mode dev",
+    "build:test": "vite build --mode dev",
     "build:prod": "vite build --mode prod",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",

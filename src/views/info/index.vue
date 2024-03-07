@@ -39,8 +39,18 @@
     <div class="page-container__content">
       <el-table :data="tableData" stripe size="small" class="table-wrap">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
-        <el-table-column prop="message" label="报错信息" width="300"></el-table-column>
-        <el-table-column prop="pageUrl" label="报错页面" width="300"></el-table-column>
+        <el-table-column
+          prop="message"
+          label="报错信息"
+          width="300"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="pageUrl"
+          label="报错页面"
+          width="300"
+          show-overflow-tooltip
+        ></el-table-column>
         <el-table-column prop="time" label="报错时间" width="150">
           <template #default="{ row }">
             <span>{{ row.time ? formatDate(row.time) : row.date }}</span>
@@ -130,7 +140,7 @@ const revertDialog = ref(false)
 const getTableData = () => {
   setTimeout(() => {
     fetchErrorList().then(({ data }) => {
-      tableData.value = data
+      tableData.value = data.sort((a, b) => b.time - a.time)
     })
   }, 500)
 }
@@ -167,7 +177,7 @@ const revertBehavior = ({ breadcrumb }) => {
 }
 
 const onSubmit = () => {
-  console.log('submit!')
+  getTableData()
 }
 </script>
 
