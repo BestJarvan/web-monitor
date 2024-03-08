@@ -11,18 +11,18 @@ function replaceAll(str) {
   return str.replace(new RegExp(' ', 'gm'), '&nbsp;');
 }
 
-function loadSourceMap(fileName) {
-  let file = matchStr(fileName);
-  if (!file) return;
+function loadSourceMap(file, time) {
+  let fileName = matchStr(file);
+  if (!fileName) return;
   return new Promise((resolve) => {
-    fetchMapFile({ fileName: file }).then(({ data }) => {
+    fetchMapFile({ fileName, time }).then(({ data }) => {
       resolve(data);
     })
   });
 }
 
-export const findCodeBySourceMap = async ({ fileName, line, column }, callback) => {
-  let sourceData = await loadSourceMap(fileName);
+export const findCodeBySourceMap = async ({ fileName, line, column, time }, callback) => {
+  let sourceData = await loadSourceMap(fileName, time);
   if (!sourceData) return;
   let { sourcesContent, sources } = sourceData;
   let consumer = await new sourceMap.SourceMapConsumer(sourceData);
