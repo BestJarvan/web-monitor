@@ -76,7 +76,7 @@ export const findCodeBySourceMap = async ({ fileName, line, column, time }, call
   for (var i = start; i <= end; i++) {
     newLines.push(
       `<div class="code-line ${i + 1 == row ? 'heightlight' : ''}" title="${i + 1 == row ? result.source : ''
-      }"><xmp>${i + 1}. ${(codeList[i])}</xmp></div>`
+      }"><xmp>${i + 1}.  ${(codeList[i])}</xmp></div>`
     );
   }
 

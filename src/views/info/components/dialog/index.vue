@@ -7,7 +7,7 @@
     destroy-on-close
     :before-close="handleClose"
   >
-    <div class="wrap">
+    <div v-if="show" class="wrap">
       <el-row :gutter="20">
         <el-col :span="18">
           <div class="wrap-line">
@@ -90,8 +90,21 @@
                     </el-icon>
                   </template>
                 </el-table-column>
-                <el-table-column prop="category" label="类型" width="180" />
-                <el-table-column prop="content" label="描述" />
+                <el-table-column prop="category" label="类型" width="140" />
+                <el-table-column prop="content" label="描述">
+                  <template #default="{ row }">
+                    <el-popover
+                      placement="top-start"
+                      :width="800"
+                      trigger="hover"
+                      :content="row.content"
+                    >
+                      <template #reference>
+                        <span class="overflow value">{{ row.content }}</span>
+                      </template>
+                    </el-popover>
+                  </template>
+                </el-table-column>
                 <el-table-column prop="time" fixed="right" label="操作时间" width="160">
                   <template #default="{ row }">
                     <span>{{ row.time ? formatDate(row.time) : row.date }}</span>
@@ -124,7 +137,7 @@
             <div class="title">SourceMap</div>
 
             <div class="content source">
-              <div v-if="0"></div>
+              <div class="source" v-if="htmlDom" v-html="htmlDom"></div>
               <el-empty v-else description="暂无SourceMap数据" />
             </div>
           </div>
@@ -195,7 +208,7 @@ import { formatDate } from '@/utils/index'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps(['item', 'show'])
-const emit = defineEmits(['update:show'])
+const emit = defineEmits(['update:show', 'clearItem'])
 
 const activities = ref([])
 const htmlDom = ref('')
@@ -212,6 +225,7 @@ watch(
 )
 
 const revertCode = (row) => {
+  console.log('revertCode: ', 1122)
   findCodeBySourceMap(row, (res) => {
     htmlDom.value = res
   })
@@ -274,6 +288,11 @@ const handleClose = () => {
   background: #fff;
   box-shadow: 0 6px 10px rgba(36, 37, 38, 0.08);
 };
+@ellipsis: {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+};
 .dialog-container {
   background-color: #f2f2f2;
   padding: 0;
@@ -322,6 +341,7 @@ const handleClose = () => {
         }
         &.source {
           min-height: 200px;
+          padding: 0 10px 10px;
           .el-empty {
             width: 100%;
             text-align: center;
@@ -333,9 +353,7 @@ const handleClose = () => {
           width: 100px;
         }
         .value {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @ellipsis();
         }
         .code {
           background-color: #eee;
@@ -354,6 +372,7 @@ const handleClose = () => {
   cursor: default;
 }
 .errdetail {
+  padding-top: 10px;
   text-align: left;
   width: 100%;
   font-size: 16px;
@@ -372,5 +391,12 @@ const handleClose = () => {
   cursor: pointer;
   margin: 0 4px;
   color: #eee;
+}
+.overflow {
+  cursor: pointer;
+}
+.source {
+  width: 100%;
+  box-sizing: border-box;
 }
 </style>
