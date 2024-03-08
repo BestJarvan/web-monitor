@@ -42,13 +42,13 @@
         <el-table-column
           prop="message"
           label="报错信息"
-          width="300"
+          min-width="300"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="pageUrl"
           label="报错页面"
-          width="300"
+          min-width="300"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column prop="time" label="报错时间" width="150">
@@ -56,29 +56,29 @@
             <span>{{ row.time ? formatDate(row.time) : row.date }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="apikey" label="项目编号"> </el-table-column>
-        <el-table-column prop="userId" label="用户id"> </el-table-column>
-        <el-table-column prop="sdkVersion" label="SDK版本"> </el-table-column>
-        <el-table-column prop="deviceInfo" label="浏览器信息">
+        <el-table-column prop="apikey" label="项目编号" width="80"></el-table-column>
+        <el-table-column prop="type" label="错误类型" width="126"></el-table-column>
+        <el-table-column prop="userId" label="用户id" width="80"></el-table-column>
+        <el-table-column prop="deviceInfo" label="浏览器信息" width="100">
           <template #default="{ row }">
             <span>{{ row.deviceInfo.browser }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="deviceInfo" label="操作系统">
+        <el-table-column prop="deviceInfo" label="操作系统" width="100">
           <template #default="{ row }">
             <span>{{ row.deviceInfo.os }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" prop="recordScreenId" label="还原错误代码" width="100">
+        <el-table-column fixed="right" prop="operate" align="center" label="操作" width="80">
           <template #default="{ row }">
-            <el-button
-              v-if="row.type == 'error' || row.type == 'unhandledrejection'"
-              type="primary"
-              size="small"
-              @click="revertCode(row)"
-              >查看源码</el-button
-            >
-            <div v-else></div>
+            <div class="btn-list">
+              <el-button type="primary" link size="small" @click="openDetail(row)"
+                >查看详情</el-button
+              >
+              <!-- <el-button size="small" v-if="row.breadcrumb" type="text" @click="revertBehavior(row)"
+                >查看用户行为</el-button
+              > -->
+            </div>
           </template>
         </el-table-column>
         <!-- <el-table-column fixed="right" prop="recordScreenId" label="播放录屏" width="100">
@@ -92,33 +92,16 @@
             >
           </template>
         </el-table-column> -->
-        <el-table-column fixed="right" prop="breadcrumb" label="用户行为记录" width="125">
-          <template #default="{ row }">
-            <el-button
-              size="small"
-              v-if="row.breadcrumb"
-              type="primary"
-              @click="revertBehavior(row)"
-              >查看用户行为</el-button
-            >
-          </template>
-        </el-table-column>
       </el-table>
     </div>
   </div>
-  <Dialog
-    v-model:show="revertDialog"
-    :dialog-title="dialogTitle"
-    :activities="activities"
-    :html-dom="htmlDom"
-  />
+  <Dialog v-model:show="revertDialog" :item="item" />
 </template>
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
 import Dialog from './components/dialog/index.vue'
 import { formatDate } from '@/utils/index'
-import { findCodeBySourceMap } from '@/utils/sourcemap'
 import { fetchErrorList } from '@/api/info'
 
 const formData = reactive({
@@ -127,53 +110,23 @@ const formData = reactive({
   date: ''
 })
 
+const tableData = ref([])
+const item = ref({})
+const revertDialog = ref(false)
+
 onMounted(() => {
   getTableData()
 })
 
-const tableData = ref([])
-const activities = ref([])
-const htmlDom = ref('')
-const dialogTitle = ref('')
-const revertDialog = ref(false)
-
 const getTableData = () => {
-  setTimeout(() => {
-    fetchErrorList().then(({ data }) => {
-      tableData.value = data.sort((a, b) => b.time - a.time)
-    })
-  }, 500)
-}
-
-const revertCode = (row) => {
-  findCodeBySourceMap(row, (res) => {
-    dialogTitle.value = '查看源码'
-    revertDialog.value = true
-    htmlDom.value = res
-    activities.value = void 0
+  fetchErrorList().then(({ data }) => {
+    tableData.value = data.sort((a, b) => b.time - a.time)
   })
 }
 
-const revertBehavior = ({ breadcrumb }) => {
-  dialogTitle.value = '查看用户行为'
+const openDetail = (row) => {
   revertDialog.value = true
-  htmlDom.value = void 0
-  breadcrumb.forEach((item) => {
-    item.color = item.status == 'ok' ? '#5FF713' : '#F70B0B'
-    item.icon = item.status == 'ok' ? 'el-icon-check' : 'el-icon-close'
-    if (item.category == 'Click') {
-      item.content = `用户点击dom: ${item.data}`
-    } else if (item.category == 'Http') {
-      item.content = `调用接口: ${item.data.url}, ${item.status == 'ok' ? '请求成功' : '请求失败'}`
-    } else if (item.category == 'Code_Error') {
-      item.content = `代码报错：${item.data.message}`
-    } else if (item.category == 'Resource_Error') {
-      item.content = `加载资源报错：${item.message}`
-    } else if (item.category == 'Route') {
-      item.content = `路由变化：从 ${item.data.from}页面 切换到 ${item.data.to}页面`
-    }
-  })
-  activities.value = breadcrumb
+  item.value = row
 }
 
 const onSubmit = () => {
@@ -185,5 +138,10 @@ const onSubmit = () => {
 .table-wrap {
   width: 100%;
   height: 100%;
+}
+.btn-list {
+  .el-button {
+    font-weight: normal !important;
+  }
 }
 </style>
