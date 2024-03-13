@@ -21,6 +21,12 @@ const router = createRouter({
           component: () => import('@/views/info/index.vue'),
           meta: { title: '错误日志' },
         },
+        {
+          path: 'source-map',
+          name: 'sourceMap',
+          component: () => import('@/views/source-map/index.vue'),
+          meta: { title: 'sourceMap管理' },
+        },
       ],
     },
     {

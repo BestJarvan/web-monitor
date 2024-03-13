@@ -17,6 +17,10 @@
         <el-icon><Aim /></el-icon>
         <template #title>报错信息</template>
       </el-menu-item>
+      <el-menu-item index="/source-map">
+        <el-icon><Document /></el-icon>
+        <template #title>sourceMap管理</template>
+      </el-menu-item>
       <!-- <el-sub-menu index="1">
         <template #title>
           <el-icon><Aim /></el-icon>
