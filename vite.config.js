@@ -21,5 +21,13 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {
+    // proxy: {
+    //   '/log': {
+    //     target: 'http://10.100.186.13:8098',
+    //     changeOrigin: true,
+    //   }
+    // }
   }
 })

@@ -4,7 +4,13 @@ const service = axios.create({})
 
 service.interceptors.request.use(
   (config) => {
-    config.baseURL = import.meta.env.VITE_BASE_URL_API
+    console.log('config: ', config);
+    const API_MAP = {
+      'NODE': import.meta.env.VITE_BASE_URL_API,
+      'JAVA': import.meta.env.VITE_BASE_JAVA_URL_API,
+    }
+    const BASE_TYPE = config.requestBase ? config.requestBase.toUpperCase() : ''
+    config.baseURL = API_MAP[BASE_TYPE] !== undefined ? API_MAP[BASE_TYPE] : import.meta.env.VITE_BASE_URL_API
 
     config.timeout = config.timeout ? config.timeout : 10000 // 自定义超时时间
     return config
