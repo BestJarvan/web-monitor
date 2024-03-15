@@ -6,7 +6,19 @@ export const PROJECT_LIST = [
 
 // 环境变量
 export const ENV_LIST = [
-  { label: '测试环境', value: 'development' },
+  { label: '测试环境', value: 'dev' },
   { label: '预发环境', value: 'pre' },
-  { label: '正式环境', value: 'production' },
+  { label: '正式环境', value: 'prod' },
+]
+
+export const EVENT_TYPES = [
+  { label: 'xhr', value: 'xhr' },
+  { label: 'fetch', value: 'fetch' },
+  { label: 'click', value: 'click' },
+  { label: 'history', value: 'history' },
+  { label: 'error', value: 'error' },
+  { label: 'hashchange', value: 'hashchange' },
+  { label: 'unhandledrejection', value: 'unhandledrejection' },
+  { label: 'resource', value: 'resource' },
+  { label: 'dom', value: 'dom' },
 ]

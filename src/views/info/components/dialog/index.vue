@@ -1,9 +1,9 @@
 <template>
-  <el-dialog
-    fullscreen
+  <el-drawer
     :model-value="show"
     title="日志详情"
-    class="dialog-container"
+    class="drawer-container"
+    size="1260"
     destroy-on-close
     :before-close="handleClose"
   >
@@ -194,11 +194,11 @@
       </el-timeline-item>
     </el-timeline> -->
     <template #footer>
-      <div class="dialog-footer">
+      <div class="drawer-footer">
         <el-button type="primary" @click="handleClose">关闭</el-button>
       </div>
     </template>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script setup>
@@ -293,15 +293,19 @@ const handleClose = () => {
   overflow: hidden;
   text-overflow: ellipsis;
 };
-.dialog-container {
+.drawer-container {
   background-color: #f2f2f2;
   padding: 0;
-  .el-dialog__header {
+  .el-drawer__header {
     @shadow();
+    margin-bottom: 0;
     padding: 12px 16px;
+    border-bottom: 1px solid #eeeeee;
   }
-  .el-dialog__footer {
+  .el-drawer__footer {
     padding: 12px 16px;
+    border-top: 1px solid #eeeeee;
+    background-color: #ffffff;
   }
   .wrap {
     padding: 12px 16px;
