@@ -225,9 +225,10 @@
     title="播放录屏"
     width="900"
     top="7vh"
+    destroy-on-close
     :before-close="handleCloseDialog"
   >
-    <div ref="revert" class="playBox"></div>
+    <div v-if="visible" ref="revert" class="playBox"></div>
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="handleCloseDialog"> 关闭 </el-button>
@@ -341,6 +342,7 @@ const handleClose = () => {
 
 const visible = ref(false)
 const revert = ref(null)
+let player
 
 const playRecord = () => {
   fetchRecordScreen({ recordScreenId: detailData.value.recordScreenId }).then(({ data }) => {
@@ -348,7 +350,7 @@ const playRecord = () => {
       const events = unzip(data.events)
       visible.value = true
       nextTick(() => {
-        new rrwebPlayer({
+        player = new rrwebPlayer({
           target: revert.value,
           props: {
             width: 870,
@@ -364,6 +366,8 @@ const playRecord = () => {
 }
 
 const handleCloseDialog = () => {
+  player.pause()
+  revert.value = null
   visible.value = false
 }
 </script>
