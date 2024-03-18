@@ -14,11 +14,15 @@ function replaceAll(str) {
 function loadSourceMap(file, time) {
   let fileName = matchStr(file);
   if (!fileName) return;
-  const hash = fileName.replace(/^\S*\.(\w*)\.js\.map$/, '$1')
+  const hash = fileName.replace(/^\S*\.(\w*)\.js(\.map)?$/, '$1')
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     fetchMapFile({ fileName, time, hash }).then(({ data }) => {
-      resolve(data);
+      if (data) {
+        resolve(JSON.parse(data));
+      } else {
+        reject()
+      }
     })
   });
 }
