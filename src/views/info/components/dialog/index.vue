@@ -7,225 +7,280 @@
     destroy-on-close
     :before-close="handleClose"
   >
-    <div v-if="show" class="wrap">
-      <el-row :gutter="20">
-        <el-col :span="18">
-          <div class="wrap-line">
-            <div class="title">Error</div>
+    <el-skeleton :rows="10" :loading="loadContent" animated>
+      <template #default>
+        <div class="wrap">
+          <el-row :gutter="20">
+            <el-col :span="18">
+              <div class="wrap-line top">
+                <div class="top-left">
+                  <div class="title">Error</div>
 
-            <div class="content">
-              <div class="label">Name:</div>
-              <div class="value">{{ item.type }}</div>
-            </div>
-            <div class="content">
-              <div class="label">Message:</div>
-              <div class="value">
-                {{ item.message || '-' }}
+                  <div class="content">
+                    <div class="label">Name:</div>
+                    <div class="value">{{ detailData.type }}</div>
+                  </div>
+                  <div class="content">
+                    <div class="label">Message:</div>
+                    <div class="value">
+                      {{ detailData.message || '-' }}
+                    </div>
+                  </div>
+                </div>
+                <div class="top-right">
+                  <el-button
+                    v-if="detailData.recordScreenId"
+                    type="primary"
+                    link
+                    @click="playRecord"
+                    >播放录屏</el-button
+                  >
+                </div>
               </div>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="3">
-          <div class="wrap-line">2</div>
-        </el-col>
-        <el-col :span="3">
-          <div class="wrap-line">3</div>
-        </el-col>
-      </el-row>
-      <!-- <el-row>
+            </el-col>
+            <el-col :span="3">
+              <div class="wrap-line center">
+                <div class="title">事件数</div>
+                <i class="iconfont chart" @click="copyValue">&#xe602;</i>
+                <div class="desc">{{ detailData.count }}次</div>
+              </div>
+            </el-col>
+            <el-col :span="3">
+              <div class="wrap-line center">
+                <div class="title">用户数</div>
+                <i class="iconfont chart" @click="copyValue">&#xe605;</i>
+                <div class="desc">{{ detailData.userNum }}人</div>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- <el-row>
         <el-col :span="24">
           <div class="wrap-line">
             <div class="title">Echarts</div>
           </div>
         </el-col>
       </el-row> -->
-      <el-row>
-        <el-col :span="24">
-          <div class="wrap-line">
-            <div class="title">Information</div>
+          <el-row>
+            <el-col :span="24">
+              <div class="wrap-line">
+                <div class="title">Information</div>
 
-            <div class="content info">
-              <div class="box">
-                <i class="iconfont">&#xea0a;</i>
-                <div>
-                  <p>Browser</p>
-                  <p>{{ item.deviceInfo.browser }}/{{ item.deviceInfo.browserVersion }}</p>
+                <div class="content info">
+                  <div class="box">
+                    <i class="iconfont">&#xea0a;</i>
+                    <div>
+                      <p>Browser</p>
+                      <p>
+                        {{ detailData.deviceInfo.browser }}/{{
+                          detailData.deviceInfo.browserVersion
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <i class="iconfont">&#xe611;</i>
+                    <div>
+                      <p>Os</p>
+                      <p>{{ detailData.deviceInfo.os }}/{{ detailData.deviceInfo.osVersion }}</p>
+                    </div>
+                  </div>
+                  <div class="box">
+                    <i class="iconfont">&#xe745;</i>
+                    <div>
+                      <p>Device</p>
+                      <p>
+                        {{ detailData.deviceInfo.device }}/{{ detailData.deviceInfo.device_type }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="box">
-                <i class="iconfont">&#xe611;</i>
-                <div>
-                  <p>Os</p>
-                  <p>{{ item.deviceInfo.os }}/{{ item.deviceInfo.osVersion }}</p>
-                </div>
-              </div>
-              <div class="box">
-                <i class="iconfont">&#xe745;</i>
-                <div>
-                  <p>Device</p>
-                  <p>{{ item.deviceInfo.device }}/{{ item.deviceInfo.device_type }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <div class="wrap-line">
-            <div class="title">Breadcrumb</div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <div class="wrap-line">
+                <div class="title">Breadcrumb</div>
 
-            <div class="content">
-              <el-table
-                :data="activities"
-                header-row-class-name="table-header"
-                max-height="300"
-                border
-                style="width: 99%"
-              >
-                <el-table-column prop="color" align="center" label="状态" width="60">
-                  <template #default="{ row }">
-                    <el-icon :style="{ color: row.color }">
-                      <i class="iconfont">{{ row.status === 'ok' ? '&#xe627;' : '&#xe626;' }}</i>
-                    </el-icon>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="category" label="类型" width="140" />
-                <el-table-column prop="content" label="描述">
-                  <template #default="{ row }">
-                    <el-popover
-                      placement="top-start"
-                      :width="800"
-                      trigger="hover"
-                      :content="row.content"
-                    >
-                      <template #reference>
-                        <span class="overflow value">{{ row.content }}</span>
+                <div class="content">
+                  <el-table
+                    :data="activities"
+                    header-row-class-name="table-header"
+                    max-height="300"
+                    border
+                    style="width: 99%"
+                  >
+                    <el-table-column prop="color" align="center" label="状态" width="60">
+                      <template #default="{ row }">
+                        <el-icon :style="{ color: row.color }">
+                          <i class="iconfont">{{
+                            row.status === 'ok' ? '&#xe627;' : '&#xe626;'
+                          }}</i>
+                        </el-icon>
                       </template>
-                    </el-popover>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="time" fixed="right" label="操作时间" width="160">
-                  <template #default="{ row }">
-                    <span>{{ row.time ? formatDate(row.time) : row.date }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <div class="wrap-line">
-            <div class="title">URL</div>
-
-            <div class="content">
-              <div class="label">url</div>
-              <div class="value code">
-                <span>{{ item.pageUrl }}</span>
-                <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
-                <i class="iconfont pointer" @click="jumpUrl">&#xe601;</i>
+                    </el-table-column>
+                    <el-table-column prop="category" label="类型" width="140" />
+                    <el-table-column prop="content" label="描述">
+                      <template #default="{ row }">
+                        <el-popover
+                          placement="top-start"
+                          :width="800"
+                          trigger="hover"
+                          :content="row.content"
+                        >
+                          <template #reference>
+                            <span class="overflow value">{{ row.content }}</span>
+                          </template>
+                        </el-popover>
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="time" fixed="right" label="操作时间" width="160">
+                      <template #default="{ row }">
+                        <span>{{ row.time ? formatDate(row.time) : row.date }}</span>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
               </div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <div class="wrap-line">
-            <div class="title">SourceMap</div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <div class="wrap-line">
+                <div class="title">URL</div>
 
-            <div class="content source">
-              <div class="source" v-if="htmlDom" v-html="htmlDom"></div>
-              <el-empty v-else description="暂无SourceMap数据" />
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <div class="wrap-line">
-            <div class="title">Header</div>
-            <div class="content">
-              <div class="label">ua</div>
-              <div class="value code">
-                <span>{{ item.deviceInfo.ua }}</span>
-                <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
+                <div class="content">
+                  <div class="label">url</div>
+                  <div class="value code">
+                    <span>{{ detailData.pageUrl }}</span>
+                    <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
+                    <i class="iconfont pointer" @click="jumpUrl">&#xe601;</i>
+                  </div>
+                </div>
               </div>
-            </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <div class="wrap-line">
+                <div class="title">SourceMap</div>
 
-            <div class="content">
-              <div class="label">token</div>
-              <div class="value code">
-                <span>{123123123123}</span>
-                <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
+                <div class="content source">
+                  <div class="source" v-if="htmlDom" v-html="htmlDom"></div>
+                  <el-empty v-else description="暂无SourceMap数据" />
+                </div>
               </div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <div class="wrap-line">
-            <div class="title">SDK</div>
-            <div class="content">
-              <div class="label">Version</div>
-              <div class="value code">
-                <span>{{ item.sdkVersion }}</span>
-                <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
-              </div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <div class="wrap-line">
+                <div class="title">Header</div>
+                <div class="content">
+                  <div class="label">ua</div>
+                  <div class="value code">
+                    <span>{{ detailData.deviceInfo.ua }}</span>
+                    <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
+                  </div>
+                </div>
 
-    <!-- <div v-if="htmlDom" v-html="htmlDom"></div>
-    <el-timeline v-else>
-      <el-timeline-item
-        v-for="(activity, index) in activities"
-        :key="index"
-        :icon="activity.icon"
-        :color="activity.color"
-        :timestamp="formatDate(activity.time)"
-      >
-        {{ activity.content }}
-      </el-timeline-item>
-    </el-timeline> -->
+                <div class="content">
+                  <div class="label">user</div>
+                  <div class="value code">
+                    <span>
+                      { userName: {{ detailData.userName }}, userId: {{ detailData.userId }} }
+                    </span>
+                    <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24">
+              <div class="wrap-line">
+                <div class="title">SDK</div>
+                <div class="content">
+                  <div class="label">Version</div>
+                  <div class="value code">
+                    <span>{{ detailData.sdkVersion }}</span>
+                    <i class="iconfont pointer" @click="copyValue">&#xe80a;</i>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      </template>
+    </el-skeleton>
     <template #footer>
       <div class="drawer-footer">
         <el-button type="primary" @click="handleClose">关闭</el-button>
       </div>
     </template>
   </el-drawer>
+
+  <el-dialog
+    v-model="visible"
+    title="播放录屏"
+    width="900"
+    top="7vh"
+    :before-close="handleCloseDialog"
+  >
+    <div ref="revert" class="playBox"></div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="handleCloseDialog"> 关闭 </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import rrwebPlayer from 'rrweb-player'
+import 'rrweb-player/dist/style.css'
+import { ref, watch, nextTick } from 'vue'
 import { findCodeBySourceMap } from '@/utils/sourcemap'
 import { formatDate } from '@/utils/index'
 import { ElMessage } from 'element-plus'
+import { fetchErrorDetail, fetchRecordScreen } from '@/api/info'
+import { unzip } from '@/utils/recordScreen'
 
-const props = defineProps(['item', 'show'])
-const emit = defineEmits(['update:show', 'clearItem'])
+const props = defineProps(['id', 'show'])
+const emit = defineEmits(['update:show', 'clearId'])
 
 const activities = ref([])
 const htmlDom = ref('')
+const detailData = ref({})
+const loadContent = ref(true)
 
 watch(
-  () => props.item,
+  () => props.id,
   (val) => {
-    console.log('val: ', val)
     if (val) {
-      revertBehavior(val)
-      ;['error', 'unhandledrejection'].includes(val.type) && revertCode(val)
+      fetchDetail()
     }
   }
 )
 
+const fetchDetail = () => {
+  if (!props.id) return
+  fetchErrorDetail({ id: props.id }).then(({ data }) => {
+    if (data) {
+      detailData.value = data
+      revertBehavior(data)
+      ;['error', 'unhandledrejection'].includes(data.type) && revertCode(data)
+      setTimeout(() => {
+        loadContent.value = false
+      }, 1000)
+    } else {
+      ElMessage.error('暂无详情数据')
+      handleClose()
+    }
+  })
+}
+
 const revertCode = (row) => {
-  console.log('revertCode: ', 1122)
   findCodeBySourceMap(row, (res) => {
     htmlDom.value = res
   })
@@ -251,7 +306,7 @@ const revertBehavior = ({ breadcrumb }) => {
 }
 
 const jumpUrl = () => {
-  window.open(props.item.pageUrl)
+  window.open(detailData.value.pageUrl)
 }
 
 const copyValue = (e) => {
@@ -279,7 +334,37 @@ const copyValue = (e) => {
 }
 
 const handleClose = () => {
+  loadContent.value = true
   emit('update:show', false)
+  emit('clearId')
+}
+
+const visible = ref(false)
+const revert = ref(null)
+
+const playRecord = () => {
+  fetchRecordScreen({ recordScreenId: detailData.value.recordScreenId }).then(({ data }) => {
+    if (data.events) {
+      const events = unzip(data.events)
+      visible.value = true
+      nextTick(() => {
+        new rrwebPlayer({
+          target: revert.value,
+          props: {
+            width: 870,
+            events,
+            UNSAFE_replayCanvas: true
+          }
+        })
+      })
+    } else {
+      ElMessage.warning('暂无数据，请稍后重试~')
+    }
+  })
+}
+
+const handleCloseDialog = () => {
+  visible.value = false
 }
 </script>
 
@@ -316,6 +401,14 @@ const handleClose = () => {
       @shadow();
       padding: 18px;
       border-radius: 10px;
+      &.top {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+      }
+      &.center {
+        text-align: center;
+      }
       .title {
         font-weight: bold;
         font-size: 18px;
@@ -375,6 +468,15 @@ const handleClose = () => {
 .iconfont {
   cursor: default;
 }
+.desc {
+  margin-top: 4px;
+  font-weight: normal;
+}
+.el-skeleton {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+}
 .errdetail {
   padding-top: 10px;
   text-align: left;
@@ -391,6 +493,9 @@ const handleClose = () => {
   padding: 10px;
   border-bottom: 1px solid rgb(214, 210, 210);
 }
+.chart {
+  font-size: 23px;
+}
 .pointer {
   cursor: pointer;
   margin: 0 4px;
@@ -398,6 +503,13 @@ const handleClose = () => {
 }
 .overflow {
   cursor: pointer;
+}
+.playBox {
+  width: 100%;
+  height: 660px;
+}
+.rr-player {
+  margin: 0 auto;
 }
 .source {
   width: 100%;

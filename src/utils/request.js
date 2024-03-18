@@ -4,7 +4,6 @@ const service = axios.create({})
 
 service.interceptors.request.use(
   (config) => {
-    console.log('config: ', config);
     const API_MAP = {
       'NODE': import.meta.env.VITE_BASE_URL_API,
       'JAVA': import.meta.env.VITE_BASE_JAVA_URL_API,
@@ -26,7 +25,6 @@ service.interceptors.response.use(
   ({ config, data, headers }) => {
     const { code, msg } = data
     if (code === '00000') {
-      console.log('data: ', data);
       return data
     } else {
       ElMessage({

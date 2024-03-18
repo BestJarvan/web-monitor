@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div ref="searchBar" class="page-container__search">
+    <div class="page-container__search">
       <el-form inline label-position="top" :model="formData">
         <el-form-item label="用户id">
           <el-input
@@ -71,7 +71,7 @@
       </el-form>
     </div>
 
-    <div ref="tableBody" class="page-container__content">
+    <div class="page-container__content">
       <el-table :data="tableData" stripe size="small" class="table-wrap">
         <el-table-column type="index" label="序号" width="50"></el-table-column>
         <el-table-column
@@ -152,7 +152,7 @@
       />
     </div>
   </div>
-  <Dialog v-model:show="revertDialog" :item="item" />
+  <Dialog v-model:show="revertDialog" :id="id" @clear-id="clearId" />
 </template>
 
 <script setup>
@@ -180,22 +180,11 @@ const page = reactive({
   totalCount: 0
 })
 const tableData = ref([])
-const item = ref({})
+const id = ref('')
 const revertDialog = ref(false)
-const searchBar = ref(null)
-const tableBody = ref(null)
 
 onMounted(() => {
   getTableData()
-  observer.observe(searchBar.value)
-})
-
-const observer = new ResizeObserver((entries) => {
-  for (let entry of entries) {
-    const { height } = entry.contentRect
-    console.log('height: ', height)
-    tableBody.value.style.height = `calc(100% - ${height + 12}px)`
-  }
 })
 
 const getTableData = () => {
@@ -216,9 +205,9 @@ const getTableData = () => {
   })
 }
 
-const openDetail = (row) => {
+const openDetail = ({ id: itemId }) => {
+  id.value = itemId
   revertDialog.value = true
-  item.value = row
 }
 
 const handleSizeChange = (val) => {
@@ -235,6 +224,10 @@ const onSubmit = () => {
 const onClear = () => {
   Object.assign(formData, formInit)
   getTableData()
+}
+const clearId = () => {
+  console.log('clearId: ', 123123)
+  id.value = ''
 }
 </script>
 
