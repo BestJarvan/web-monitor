@@ -12,7 +12,7 @@
         <div class="wrap">
           <el-row :gutter="20">
             <el-col :span="18">
-              <div class="wrap-line top">
+              <div class="wrap-line top custom">
                 <div class="top-left">
                   <div class="title">Error</div>
 
@@ -39,14 +39,14 @@
               </div>
             </el-col>
             <el-col :span="3">
-              <div class="wrap-line center">
+              <div class="wrap-line center custom">
                 <div class="title">事件数</div>
                 <i class="iconfont chart" @click="copyValue">&#xe602;</i>
                 <div class="desc">{{ detailData.count }}次</div>
               </div>
             </el-col>
             <el-col :span="3">
-              <div class="wrap-line center">
+              <div class="wrap-line center custom">
                 <div class="title">用户数</div>
                 <i class="iconfont chart" @click="copyValue">&#xe605;</i>
                 <div class="desc">{{ detailData.userNum }}人</div>
@@ -518,5 +518,11 @@ const handleCloseDialog = () => {
 .source {
   width: 100%;
   box-sizing: border-box;
+}
+.custom {
+  height: 88px;
+  .wrap-line {
+    height: 88px;
+  }
 }
 </style>
