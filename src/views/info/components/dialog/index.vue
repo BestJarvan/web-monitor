@@ -444,8 +444,8 @@ let player
 
 const playRecord = () => {
   fetchRecordScreen({ recordScreenId: detailData.value.recordScreenId }).then(({ data }) => {
-    if (data.events) {
-      const events = unzip(data.events)
+    if (data) {
+      const events = unzip(data)
       visible.value = true
       nextTick(() => {
         player = new rrwebPlayer({
