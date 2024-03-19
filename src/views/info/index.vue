@@ -166,8 +166,8 @@ const formInit = {
   userId: void 0,
   userName: void 0,
   type: void 0,
-  apikey: PROJECT_LIST[0].value,
-  env: ENV_LIST[0].value,
+  apikey: '',
+  env: '',
   date: []
 }
 
