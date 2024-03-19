@@ -226,7 +226,6 @@ const onClear = () => {
   getTableData()
 }
 const clearId = () => {
-  console.log('clearId: ', 123123)
   id.value = ''
 }
 </script>
