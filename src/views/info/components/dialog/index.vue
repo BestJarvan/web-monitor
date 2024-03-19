@@ -53,13 +53,14 @@
               </div>
             </el-col>
           </el-row>
-          <!-- <el-row>
-        <el-col :span="24">
-          <div class="wrap-line">
-            <div class="title">Echarts</div>
-          </div>
-        </el-col>
-      </el-row> -->
+          <el-row>
+            <el-col :span="24">
+              <div class="wrap-line">
+                <div class="title">趋势图</div>
+                <div ref="chartsRef" class="content"></div>
+              </div>
+            </el-col>
+          </el-row>
           <el-row>
             <el-col :span="24">
               <div class="wrap-line">
@@ -238,12 +239,12 @@
 </template>
 
 <script setup>
+import { ref, watch, nextTick } from 'vue'
 import rrwebPlayer from 'rrweb-player'
 import 'rrweb-player/dist/style.css'
-import { ref, watch, nextTick } from 'vue'
+import { Chart } from '@antv/g2'
 import { findCodeBySourceMap } from '@/utils/sourcemap'
 import { formatDate } from '@/utils/index'
-import { ElMessage } from 'element-plus'
 import { fetchErrorDetail, fetchRecordScreen } from '@/api/info'
 import { unzip } from '@/utils/recordScreen'
 
@@ -252,8 +253,73 @@ const emit = defineEmits(['update:show', 'clearId'])
 
 const activities = ref([])
 const htmlDom = ref('')
+const chartsRef = ref(null)
 const detailData = ref({})
 const loadContent = ref(true)
+
+let chart
+const chartData = [
+  {
+    month: '2024-01-01',
+    Tokyo: 7.0,
+    London: 3.9
+  },
+  {
+    month: '2024-01-02',
+    Tokyo: 6.9,
+    London: 4.2
+  },
+  {
+    month: '2024-01-03',
+    Tokyo: 9.5,
+    London: 5.7
+  },
+  {
+    month: '2024-01-04',
+    Tokyo: 14.5,
+    London: 8.5
+  },
+  {
+    month: '2024-01-05',
+    Tokyo: 18.4,
+    London: 11.9
+  },
+  {
+    month: '2024-01-06',
+    Tokyo: 21.5,
+    London: 15.2
+  },
+  {
+    month: '2024-01-07',
+    Tokyo: 25.2,
+    London: 17.0
+  },
+  {
+    month: '2024-01-08',
+    Tokyo: 26.5,
+    London: 16.6
+  },
+  {
+    month: '2024-01-09',
+    Tokyo: 23.3,
+    London: 14.2
+  },
+  {
+    month: '2024-01-10',
+    Tokyo: 18.3,
+    London: 10.3
+  },
+  {
+    month: '2024-01-11',
+    Tokyo: 13.9,
+    London: 6.6
+  },
+  {
+    month: '2024-01-12',
+    Tokyo: 9.6,
+    London: 4.8
+  }
+]
 
 watch(
   () => props.id,
@@ -273,12 +339,43 @@ const fetchDetail = () => {
       ;['error', 'unhandledrejection'].includes(data.type) && revertCode(data)
       setTimeout(() => {
         loadContent.value = false
+        nextTick(() => {
+          initChart()
+        })
       }, 1000)
     } else {
       ElMessage.error('暂无详情数据')
       handleClose()
     }
   })
+}
+
+const initChart = () => {
+  chart = new Chart({
+    container: chartsRef.value,
+    width: 1137,
+    height: 300
+  })
+  chart
+    .data({
+      value: chartData,
+      transform: [
+        {
+          type: 'fold',
+          fields: ['Tokyo', 'London'], // 展开字段集
+          key: 'city', // key字段
+          value: 'temperature' // value字段
+        }
+      ]
+    })
+    .encode('x', 'month')
+    .encode('y', 'temperature')
+    .encode('color', 'city')
+
+  chart.line().encode('shape', 'smooth')
+  chart.point().encode('shape', 'point')
+
+  chart.render()
 }
 
 const revertCode = (row) => {
@@ -336,6 +433,7 @@ const copyValue = (e) => {
 
 const handleClose = () => {
   loadContent.value = true
+  chart.destroy()
   emit('update:show', false)
   emit('clearId')
 }
