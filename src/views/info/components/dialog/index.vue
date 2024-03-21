@@ -57,11 +57,16 @@
               </div>
             </el-col>
           </el-row>
-          <el-row v-if="detailData.chartsList && detailData.chartsList.length">
+          <el-row>
             <el-col :span="24">
               <div class="wrap-line">
                 <div class="title">趋势图</div>
-                <div ref="chartsRef" class="content"></div>
+                <div
+                  v-if="detailData.chartsList && detailData.chartsList.length"
+                  ref="chartsRef"
+                  class="content"
+                ></div>
+                <el-empty v-else description="暂无图表数据" />
               </div>
             </el-col>
           </el-row>
