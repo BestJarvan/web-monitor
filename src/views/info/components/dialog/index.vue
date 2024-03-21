@@ -35,6 +35,10 @@
                     @click="playRecord"
                     >播放录屏</el-button
                   >
+                  <br />
+                  <el-button v-if="detailData.recordScreenId" type="primary" link @click="ignoreMsg"
+                    >忽略此类报错</el-button
+                  >
                 </div>
               </div>
             </el-col>
@@ -53,7 +57,7 @@
               </div>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row v-if="detailData.chartsList && detailData.chartsList.length">
             <el-col :span="24">
               <div class="wrap-line">
                 <div class="title">趋势图</div>
@@ -245,8 +249,9 @@ import 'rrweb-player/dist/style.css'
 import { Chart } from '@antv/g2'
 import { findCodeBySourceMap } from '@/utils/sourcemap'
 import { formatDate } from '@/utils/index'
-import { fetchErrorDetail, fetchRecordScreen } from '@/api/info'
+import { fetchErrorDetail, fetchRecordScreen, addExclude } from '@/api/info'
 import { unzip } from '@/utils/recordScreen'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps(['id', 'show'])
 const emit = defineEmits(['update:show', 'clearId'])
@@ -289,7 +294,8 @@ const fetchDetail = () => {
 }
 
 const initChart = (chartData) => {
-  if (!chartData) return
+  console.log('chartData: ', chartData)
+  if (!chartData || !chartData.length) return
   chart = new Chart({
     container: chartsRef.value,
     width: 1137,
@@ -344,7 +350,6 @@ const revertBehavior = ({ breadcrumb }) => {
     }
   })
   activities.value = breadcrumb
-  console.log('activities.value : ', activities.value)
 }
 
 const jumpUrl = () => {
@@ -377,7 +382,7 @@ const copyValue = (e) => {
 
 const handleClose = () => {
   loadContent.value = true
-  chart.destroy()
+  chart && chart.destroy()
   emit('update:show', false)
   emit('clearId')
 }
@@ -405,6 +410,25 @@ const playRecord = () => {
       ElMessage.warning('暂无数据，请稍后重试~')
     }
   })
+}
+
+const ignoreMsg = () => {
+  ElMessageBox.confirm('忽略后将不会收到此类错误信息，是否确定忽略?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      const params = {
+        apikey: detailData.value.apikey,
+        env: detailData.value.env,
+        message: detailData.value.message
+      }
+      addExclude(params).then(({ msg }) => {
+        ElMessage.success(msg)
+      })
+    })
+    .catch(() => {})
 }
 
 const handleCloseDialog = () => {

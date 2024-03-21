@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 忽略此类错误
+export function addExclude(data = {}) {
+  return request({
+    requestBase: 'java',
+    url: '/log-center/log/addExclude',
+    method: 'post',
+    data,
+  })
+}
 // 错误信息列表
 export function fetchErrorList(data = {}) {
   return request({
