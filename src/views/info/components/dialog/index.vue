@@ -294,7 +294,6 @@ const fetchDetail = () => {
 }
 
 const initChart = (chartData) => {
-  console.log('chartData: ', chartData)
   if (!chartData || !chartData.length) return
   chart = new Chart({
     container: chartsRef.value,
