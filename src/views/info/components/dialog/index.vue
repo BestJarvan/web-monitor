@@ -258,68 +258,6 @@ const detailData = ref({})
 const loadContent = ref(true)
 
 let chart
-const chartData = [
-  {
-    month: '2024-01-01',
-    Tokyo: 7.0,
-    London: 3.9
-  },
-  {
-    month: '2024-01-02',
-    Tokyo: 6.9,
-    London: 4.2
-  },
-  {
-    month: '2024-01-03',
-    Tokyo: 9.5,
-    London: 5.7
-  },
-  {
-    month: '2024-01-04',
-    Tokyo: 14.5,
-    London: 8.5
-  },
-  {
-    month: '2024-01-05',
-    Tokyo: 18.4,
-    London: 11.9
-  },
-  {
-    month: '2024-01-06',
-    Tokyo: 21.5,
-    London: 15.2
-  },
-  {
-    month: '2024-01-07',
-    Tokyo: 25.2,
-    London: 17.0
-  },
-  {
-    month: '2024-01-08',
-    Tokyo: 26.5,
-    London: 16.6
-  },
-  {
-    month: '2024-01-09',
-    Tokyo: 23.3,
-    London: 14.2
-  },
-  {
-    month: '2024-01-10',
-    Tokyo: 18.3,
-    London: 10.3
-  },
-  {
-    month: '2024-01-11',
-    Tokyo: 13.9,
-    London: 6.6
-  },
-  {
-    month: '2024-01-12',
-    Tokyo: 9.6,
-    London: 4.8
-  }
-]
 
 watch(
   () => props.id,
@@ -340,7 +278,7 @@ const fetchDetail = () => {
       setTimeout(() => {
         loadContent.value = false
         nextTick(() => {
-          initChart()
+          initChart(data.chartsList)
         })
       }, 1000)
     } else {
@@ -350,27 +288,33 @@ const fetchDetail = () => {
   })
 }
 
-const initChart = () => {
+const initChart = (chartData) => {
+  if (!chartData) return
   chart = new Chart({
     container: chartsRef.value,
     width: 1137,
     height: 300
   })
+
   chart
     .data({
       value: chartData,
       transform: [
         {
           type: 'fold',
-          fields: ['Tokyo', 'London'], // 展开字段集
-          key: 'city', // key字段
-          value: 'temperature' // value字段
+          fields: ['count', 'userNum'], // 展开字段集
+          key: 'info', // key字段
+          value: 'total' // value字段
         }
       ]
     })
-    .encode('x', 'month')
-    .encode('y', 'temperature')
-    .encode('color', 'city')
+    .encode('x', 'date')
+    .encode('y', 'total')
+    .encode('color', 'info')
+
+  // .axis('y', {
+  //   labelFormatter: (val) => Math.floor(val)
+  // })
 
   chart.line().encode('shape', 'smooth')
   chart.point().encode('shape', 'point')
@@ -552,13 +496,25 @@ const handleCloseDialog = () => {
           width: 100px;
         }
         .value {
-          @ellipsis();
+          // @ellipsis();
         }
         .code {
+          display: flex;
+          align-items: center;
+          overflow: hidden;
           background-color: #eee;
-          padding: 2px 12px 2px 8px;
+          padding: 2px 6px 2px 8px;
           border-radius: 4px;
           color: var(--el-color-primary);
+          span {
+            display: block;
+            width: 100%;
+            margin-right: 6px;
+            @ellipsis();
+          }
+          .iconfont {
+            width: 20px;
+          }
         }
         .table-header > th {
           background-color: #fafafa !important;

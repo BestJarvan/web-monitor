@@ -91,20 +91,11 @@
             <span>{{ row.time ? formatDate(row.time) : row.date }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="apikey" label="项目编号" width="80"></el-table-column>
+        <el-table-column prop="apikey" label="项目编号" width="70"></el-table-column>
+        <el-table-column prop="env" label="环境" width="60"></el-table-column>
         <el-table-column prop="type" label="错误类型" width="126"></el-table-column>
-        <el-table-column
-          prop="userId"
-          label="用户id"
-          width="160"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="userName"
-          label="用户名"
-          width="100"
-          show-overflow-tooltip
-        ></el-table-column>
+        <el-table-column prop="userName" label="用户名" width="60"></el-table-column>
+        <el-table-column prop="userId" label="用户id" width="160"></el-table-column>
         <el-table-column prop="deviceInfo" label="浏览器信息" width="100">
           <template #default="{ row }">
             <span>{{ row.deviceInfo.browser }}</span>
