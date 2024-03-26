@@ -5,6 +5,7 @@
     class="drawer-container"
     size="1260"
     destroy-on-close
+    append-to-body
     :before-close="handleClose"
   >
     <el-skeleton :rows="10" :loading="loadContent" animated>
