@@ -148,6 +148,7 @@
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import Dialog from './components/dialog/index.vue'
 import { formatDate } from '@/utils/index'
 import { fetchErrorList } from '@/api/info'
@@ -174,7 +175,12 @@ const tableData = ref([])
 const id = ref('')
 const revertDialog = ref(false)
 
+const route = useRoute()
+
 onMounted(() => {
+  if (route.query.id) {
+    openDetail({ id: route.query.id })
+  }
   getTableData()
 })
 
