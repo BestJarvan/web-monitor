@@ -11,7 +11,7 @@ const props = defineProps(['collapse'])
 
 <style lang="less" scoped>
 .main-wrap {
-  padding: 60px 16px 16px 226px;
+  padding: 64px 16px 16px 226px;
   width: 100%;
   overflow-x: hidden;
   background-color: #f2f2f2;

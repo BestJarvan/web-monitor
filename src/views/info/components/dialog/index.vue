@@ -310,25 +310,38 @@ const initChart = (chartData) => {
   chart
     .data({
       value: chartData,
-      transform: [
-        {
-          type: 'fold',
-          fields: ['count', 'userNum'], // 展开字段集
-          key: 'info', // key字段
-          value: 'total' // value字段
-        }
-      ]
+      type: 'custom',
+      callback: ({ value }) => {
+        const arr = []
+        value.forEach((v) => {
+          const obj = {
+            date: v.date,
+            total: v.count,
+            key: '事件数'
+          }
+          const obj2 = {
+            date: v.date,
+            total: v.userNum,
+            key: '用户数'
+          }
+          arr.push(obj)
+          arr.push(obj2)
+        })
+        return arr
+      }
     })
     .encode('x', 'date')
     .encode('y', 'total')
-    .encode('color', 'info')
-
-  // .axis('y', {
-  //   labelFormatter: (val) => Math.floor(val)
-  // })
+    .encode('color', 'key')
+    .scale('x', {
+      range: [0, 1]
+    })
+    .scale('y', {
+      nice: true
+    })
 
   chart.line().encode('shape', 'smooth')
-  chart.point().encode('shape', 'point')
+  chart.point().encode('shape', 'point').tooltip(false)
 
   chart.render()
 }
@@ -397,10 +410,10 @@ const revert = ref(null)
 let player
 
 const playRecord = () => {
+  visible.value = true
   fetchRecordScreen({ recordScreenId: detailData.value.recordScreenId }).then(({ data }) => {
     if (data) {
       const events = unzip(data)
-      visible.value = true
       nextTick(() => {
         player = new rrwebPlayer({
           target: revert.value,

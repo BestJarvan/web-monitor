@@ -60,9 +60,12 @@ export const findCodeBySourceMap = async ({ fileName, line, column, time }, call
   // 未找到，将sources路径格式化后重新匹配 /./ 替换成 /
   // 测试中发现会有路径中带/./的情况，如 webpack://web-see/./src/main.js
   if (index === -1) {
-    let copySources = JSON.parse(JSON.stringify(sources)).map((item) =>
-      item.replace(/\/.\//g, '/')
+    let copySources = sources.map((item) =>
+      item.replace(/\/\.\//g, '/')
     );
+    console.log('copySources: ', copySources);
+    console.log('result: ', result.source);
+
     index = copySources.indexOf(result.source);
   }
   if (index === -1) {
