@@ -18,6 +18,14 @@
             clearable
           />
         </el-form-item>
+        <el-form-item label="报错信息">
+          <el-input
+            class="search-width"
+            v-model="formData.message"
+            placeholder="请输入报错信息"
+            clearable
+          />
+        </el-form-item>
         <el-form-item label="项目">
           <el-select class="search-width" v-model="formData.apikey" placeholder="请选择项目">
             <el-option
