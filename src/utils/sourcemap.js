@@ -63,8 +63,6 @@ export const findCodeBySourceMap = async ({ fileName, line, column, time }, call
     let copySources = sources.map((item) =>
       item.replace(/\/\.\//g, '/')
     );
-    console.log('copySources: ', copySources);
-    console.log('result: ', result.source);
 
     index = copySources.indexOf(result.source);
   }
