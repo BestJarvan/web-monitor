@@ -166,6 +166,7 @@ const formInit = {
   userId: void 0,
   userName: void 0,
   type: void 0,
+  message: void 0,
   apikey: '',
   env: '',
   date: []
