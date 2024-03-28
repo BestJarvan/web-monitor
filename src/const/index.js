@@ -9,7 +9,7 @@ export const PROJECT_LIST = [
 export const ENV_LIST = [
   { label: '测试环境', value: 'test' },
   { label: '预发环境', value: 'pre' },
-  { label: '正式环境', value: 'prod' },
+  { label: '正式环境', value: 'master' },
 ]
 
 export const EVENT_TYPES = [
